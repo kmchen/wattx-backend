@@ -14,11 +14,21 @@ import (
 )
 
 // Find min in int slice
-func findMin(v []int) int {
-	var m int
-	for i, e := range v {
-		if i == 0 || e < m {
-			m = e
+//func findMin(v []int) int {
+//var m int
+//for i, e := range v {
+//if i == 0 || e < m {
+//m = e
+//}
+//}
+//return m
+//}
+
+func findMin(slice []int) int {
+	var m = 0
+	for k, v := range slice {
+		if k == 0 || v < m {
+			m = v
 		}
 	}
 	return m
@@ -33,24 +43,24 @@ func even(a []int) (r []int) {
 	return
 }
 
-func removeDuplicatesInt(elements []int) []int {
-	// Use map to record duplicates as we find them.
-	encountered := map[int]bool{}
-	result := []int{}
+//func removeDuplicatesInt(elements []int) []int {
+//// Use map to record duplicates as we find them.
+//encountered := map[int]bool{}
+//result := []int{}
 
-	for v := range elements {
-		if encountered[elements[v]] == true {
-			// Do not add duplicate.
-		} else {
-			// Record this element as an encountered element.
-			encountered[elements[v]] = true
-			// Append to result slice.
-			result = append(result, elements[v])
-		}
-	}
-	// Return the new slice.
-	return result
-}
+//for v := range elements {
+//if encountered[elements[v]] == true {
+//// Do not add duplicate.
+//} else {
+//// Record this element as an encountered element.
+//encountered[elements[v]] = true
+//// Append to result slice.
+//result = append(result, elements[v])
+//}
+//}
+//// Return the new slice.
+//return result
+//}
 
 func removeDuplicatesStringSlice(elements []string) []string {
 	encountered := map[string]bool{}
@@ -87,14 +97,14 @@ func sortKeysInMap(codes map[string]int) map[string]int {
 	return newMap
 }
 
-func stripchars(str, chr string) string {
-	return strings.Map(func(r rune) rune {
-		if strings.IndexRune(chr, r) < 0 {
-			return r
-		}
-		return -1
-	}, str)
-}
+//func stripchars(str, chr string) string {
+//return strings.Map(func(r rune) rune {
+//if strings.IndexRune(chr, r) < 0 {
+//return r
+//}
+//return -1
+//}, str)
+//}
 
 func matchString(first, second string) {
 	fmt.Printf("1. %s starts with %s: %t\n",
@@ -162,6 +172,15 @@ func (a csArray) Less(i, j int) bool { return a[i].name < a[j].name }
 func (a csArray) Len() int           { return len(a) }
 func (a csArray) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 
+type c struct {
+	i     int
+	s, rs string
+}
+type cc []*c
+
+func (c cc) Len() int           { return len(c) }
+func (c cc) Less(i, j int) bool { return c[j].rs < c[i].rs }
+func (c cc) Swap(i, j int)      { c[i], c[j] = c[j], c[i] }
 func li(is ...int) *big.Int {
 	ps := make(cc, len(is))
 	ss := make([]c, len(is))
@@ -188,9 +207,9 @@ func li(is ...int) *big.Int {
 }
 
 func main() {
-	fmt.Println(findMin([]int{5, 4, 3, 2, 1, -1, 0, -1, -1, 1}))
-	fmt.Println(removeDuplicatesInt([]int{5, 4, 3, 2, 1, -1, 0, -1, -1, 1}))
-	fmt.Println(removeDuplicatesInt([]int{10, 20, 30, 10, 10, 20, 40}))
+	fmt.Println("findMin ", 5, 4, 3, 2, 1, -1, 0, -1, -1, 1, findMin([]int{5, 4, 3, 2, 1, -1, 0, -1, -1, 1}))
+	fmt.Println("removeDuplicatesInt", 5, 4, 3, 2, 1, -1, 0, -1, -1, 1, removeDuplicatesInt([]int{5, 4, 3, 2, 1, -1, 0, -1, -1, 1}))
+	fmt.Println("removeDuplicatesInt", 10, 20, 30, 10, 10, 20, 40, removeDuplicatesInt([]int{10, 20, 30, 10, 10, 20, 40}))
 	fmt.Println(removeDuplicatesStringSlice([]string{"cat", "dog", "cat", "bird"}))
 	stringSlice := []string{"cat", "dog", "cat", "bird"}
 	sort.Strings(stringSlice)
@@ -202,9 +221,10 @@ func main() {
 		"def": 1,
 	}
 	fmt.Println(sortKeysInMap(codes))
-	fmt.Println(stripchars("She was a soul stripper. She took my heart!",
-		"aei"))
+	fmt.Println("Stripchars", stripchars("She was a soul stripper. She took my heart!", "aei"))
 	matchString("abracadabra", "abr")
+	fmt.Println("Matching string: ", "012345678910")
+	fmt.Println("Matching string: ", "abracadabra", "abr", matchString1("abracadabra", "abr"))
 
 	var simple = `
 	    simple   `
@@ -248,13 +268,20 @@ func main() {
 
 	// Reverse a string
 	s = "asdf"
+	s = "abcdefghijklmnopqrstuvwxyz"
 	fmt.Println("\noriginal:      ", []byte(s), s)
 	fmt.Println(reverseBytes(s))
+	fmt.Println(reverseString(s))
 
 	// Even number filter
 	a := rand.Perm(20)
 	fmt.Println("original: ", a)
 	fmt.Println("even number filter: ", even(a))
+
+	// positive filter
+	a = rand.Perm(20)
+	fmt.Println("original: ", a)
+	fmt.Println("positive number filter: ", positive(a))
 
 	// Sort object in slice
 	var x = csArray{
@@ -269,10 +296,59 @@ func main() {
 	}
 
 	// largest int from slice int
-	type c struct {
-		i     int
-		s, rs string
-	}
 	fmt.Println(li(1, 34, 3, 98, 9, 76, 45, 4))
 	fmt.Println(li(54, 546, 548, 60))
+}
+
+func positive(array []int) (r []int) {
+	for _, v := range array {
+		if v > 0 {
+			r = append(r, v)
+		}
+	}
+	return
+}
+
+func removeDuplicatesInt(array []int) []int {
+	encounters := map[int]bool{}
+	result := []int{}
+	for _, v := range array {
+		if _, ok := encounters[v]; !ok {
+			encounters[v] = true
+			result = append(result, v)
+		}
+	}
+	return result
+}
+
+func stripchars(str, chr string) string {
+	return strings.Map(func(r rune) rune {
+		if strings.IndexRune(chr, r) == -1 {
+			return r
+		}
+		return -1
+	}, str)
+}
+
+func matchString1(first, second string) []int {
+	index := []int{}
+	for ptr := 0; ptr < len(first); {
+		subStr := first[ptr:]
+		if subPtr := strings.Index(subStr, second); subPtr > -1 {
+			index = append(index, ptr+subPtr)
+			ptr += subPtr + len(second)
+		} else {
+			ptr += 1
+		}
+	}
+	return index
+}
+
+func reverseString(s string) string {
+	reversedStr := make([]byte, len(s))
+	for k, _ := range s {
+		ptr := len(s) - 1
+		reversedStr[k] = s[ptr-k]
+	}
+	return string(reversedStr)
 }
